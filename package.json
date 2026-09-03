@@ -1,0 +1,20 @@
+{
+  "name": "@example/wl",
+  "version": "0.0.1",
+  "description": "Template console white-label pack: logos, captions, and locales. Rename to @<tenant>/wl.",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "captions.js",
+    "assets",
+    "locales"
+  ]
+}
