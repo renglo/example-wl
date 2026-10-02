@@ -1,146 +1,142 @@
-# example-wl
+# Product pack (template)
 
-Public **GitHub template** for a console **white-label** package
-(`@<tenant>/wl`). It supplies logos, captions, and language files that the
-console loads as `@wl`.
+Public GitHub template ([renglo/example-wl](https://github.com/renglo/example-wl)). After **Use this template**, rename npm/Python packages to `@<tenant>/wl` and `<tenant>-wl` (see [INSTALLATION.md](INSTALLATION.md)).
 
-Real systems rename this pack (for example Acme uses `@acme/wl`). The **filenames** under `assets/` and the export shape in `index.js` must stay the
-same so the console keeps working.
+This repository is the **single place** for product branding, messaging, and the list of packages the product ships. Console, API, and infrastructure read from the published pack; you change files here and merge through your normal Git workflow.
+
+First-time repo setup, publishing, and local dev: **[INSTALLATION.md](INSTALLATION.md)**.
 
 ---
 
-## Create a new `<tenant>-wl` repository
-
-You need a GitHub account that can create repositories in the **destination
-organization**.
-
-### 1. Create the repo from this template
-
-1. Open this repository on GitHub:
-  [renglo/example-wl](https://github.com/renglo/example-wl) .
-2. Click **Use this template** → **Create a new repository**.
-3. Choose:
-  - **Owner:** the destination organization (or your user).
-  - **Repository name:** `<tenant>-wl` (example: `apollo-wl`).
-  - **Visibility:** usually **Private**.
-4. Click **Create repository**.
-
-You do **not** need any other local project layout to start.
-
-### 2. Clone your new repo
-
-```bash
-git clone git@github.com:<ORG>/<tenant>-wl.git
-cd <tenant>-wl
-```
-
-<tenant> is the name of the target system.
-
-### 3. Rename the npm package
-
-In `package.json`, set the name to your scope:
-
-```json
-{
-  "name": "@<tenant>/wl"
-}
-```
-
-Rules:
-
-- Must match `@<tenant>/wl` (the console treats any `@*/wl` pack as white-label).
-- Keep `"version"` starting at `0.0.1` (or whatever you will publish).
+## Who changes what
 
 
-
-### 4. Replace branding files
-
-**Keep these filenames.** Only replace the file contents.
-
-
-| File                    | Used for                                    | Suggested size |
-| ----------------------- | ------------------------------------------- | -------------- |
-| `assets/small_logo.png` | Header and menu logo                        | 500×500 px     |
-| `assets/large_logo.png` | Login mark                                  | 1000×1000 px   |
-| `assets/background.png` | Login background                            | e.g. 1920×1080 |
-| `locales/en.json`       | English copy (`appName`, login text)        | —              |
-| `captions.js`           | Short strings — keep in sync with `en.json` | —              |
+| You are…         | You edit…                 | You usually do **not** touch…                             |
+| ---------------- | ------------------------- | --------------------------------------------------------- |
+| Graphic designer | `assets/`                 | `product.yaml`, `package.json`, code                      |
+| Copy / messaging | `locales/`, `captions.js` | `assets/` (unless coordinating a rebrand), `product.yaml` |
+| Developer        | `product.yaml`            | Version pins, deployment placement (operator / infra)     |
 
 
-Add another language as `locales/<code>.json` and export it from `index.js`
-(same pattern as `en`).
+**Do not rename** files under `assets/` or change export names in `index.js`. Replace file **contents** only, unless a developer adds a new locale or asset slot.
 
-### 5. Commit and push
-
-```bash
-git add package.json captions.js locales assets
-git commit -m "Brand <tenant> white-label pack"
-git push origin main
-```
-
-
-
-### 6. Wire it into your system BOM
-
-In your `<tenant>-bom` repo, either:
-
-**Git pin** (CI clones this repo):
-
-```json
-"repos": {
-  "mycompany/apollo-wl": {
-    "url": "git@github.com:mycompany/apollo-wl.git",
-    "commit": "<full sha>",
-    "branch": "main"
-  }
-}
-```
-
-**Or npm pin** after you publish to CodeArtifact:
-
-```json
-"npm": {
-  "@apollo/wl": "0.0.1"
-}
-```
-
-Also set the console env so it loads your pack (deploy / `.env`):
-
-```bash
-VITE_WL_PACKAGE=@apollo/wl
-```
-
-
-
-### 7. Publish (optional)
-
-`.github/workflows/publish-npm.yml` publishes to the publisher CodeArtifact when
-you push a `v*` tag. Configure repo variables first (`AWS_PUBLISH_ROLE_ARN`,
-`PUBLISHER_NAME`, `AWS_REGION`) the same way as other npm packages. Until then
-you can ship via the git pin only.
+After your change merges, someone tags a release when staging or production should pick it up (see [Publish](INSTALLATION.md#publish) in INSTALLATION.md).
 
 ---
 
 
 
-## Package layout
+## Graphic designer — logos and imagery
+
+**Folder:** `assets/`
 
 
-| Path                                | Role                                                                           |
-| ----------------------------------- | ------------------------------------------------------------------------------ |
-| `package.json`                      | npm name `@<tenant>/wl`                                                        |
-| `index.js` / `index.d.ts`           | Public exports (`smallLogo`, `largeLogo`, `background`, `captions`, `locales`) |
-| `captions.js`                       | Short UI strings                                                               |
-| `locales/*.json`                    | Locale files                                                                   |
-| `assets/*.png`                      | Logos and login background                                                     |
-| `.github/workflows/publish-npm.yml` | Tag → CodeArtifact publish                                                     |
+| File             | Where it appears              | Suggested size |
+| ---------------- | ----------------------------- | -------------- |
+| `small_logo.png` | Header, menu, small UI chrome | 500×500 px     |
+| `large_logo.png` | Login screen mark             | 1000×1000 px   |
+| `background.png` | Login background              | e.g. 1920×1080 |
+
+
+Use PNG (or the same format already in the repo). Keep the **exact filenames** above so the console and npm pack keep resolving paths.
+
+**Checklist**
+
+1. Export replacements with the same names.
+2. Drop them into `assets/` (overwrite the old files).
+3. Open a pull request with only asset changes (or pair with copy if it is a full rebrand).
+4. Preview locally if someone on the team runs the console with this checkout; otherwise rely on staging after release.
+
+Invite emails attach `small_logo.png`. If the small mark changes, no other file rename is required.
+
+---
 
 
 
+## Copy and messaging — locales and captions
 
-## Local console development
+**Primary files:** `locales/*.json`, `captions.js`
 
-Point the console at your pack with `VITE_WL_PACKAGE=@<tenant>/wl`. With a
-workspace checkout named `<tenant>-wl` (or `dev/<tenant>-wl`), the console
-resolver can pick it up the same way as other WL packs — see the console
-`wl.local.ts` / env templates.
+### `locales/en.json` (and other languages)
+
+This file drives UI strings and **transactional email** copy (for example team invites under `email.invite`). The API reads the same JSON through the `wl` Python package.
+
+Typical keys:
+
+- `appName` — product name shown across the UI and emails.
+- Login and general UI strings (structure matches the template in this repo).
+- `email.invite` — subject, body, and placeholders for invite messages (`{appName}`, `{team}`, `{inviter}`, `{code}`, etc.).
+
+To add a language, copy the `en.json` pattern to `locales/<code>.json` and register that locale in `index.js` (ask a developer for the one-line export if you are unsure).
+
+### `captions.js`
+
+Short strings used in places that import captions directly. Keep wording **consistent** with `locales/en.json` where the same concept appears twice.
+
+**Checklist**
+
+1. Edit JSON in `locales/` (valid JSON: double quotes, no trailing commas).
+2. Update `captions.js` if the same phrase lives there.
+3. Pull request; mention if invite email copy changed so QA can send a test invite.
+4. Tagged release ships copy to environments that install the pack from the registry.
+
+You do **not** edit the console or API repos for product copy.
+
+---
+
+
+
+## Developer — product package list (`product.yaml`)
+
+**File:** `product.yaml`
+
+This is the **manifest** of packages the product should install: marketplace extensions, shared modules, and handler packs. Operators sync it into environment config; you maintain the list here in Git.
+
+```yaml
+packages:
+  data:
+    python: renglo-data
+    npm: '@renglo/data'
+  billing:
+    python: acme-billing
+    npm: '@acme/billing'
+```
+
+
+| Field                      | Meaning                                               |
+| -------------------------- | ----------------------------------------------------- |
+| Key (`data`, `billing`, …) | **Handle** — short name used in placement and tooling |
+| `python`                   | Wheel name on the registry (omit if UI-only)          |
+| `npm`                      | Scoped UI package (omit if API-only)                  |
+
+
+**Include** anything the whole product should ship, even when no single repo imports it (for example a channel extension everyone gets in the marketplace).
+
+**Do not list** platform packages (`renglo-lib`, `renglo-api`, `@renglo/console`, or this white-label pack).
+
+**Do not add** version numbers or hub/peer placement. Versions come from the release train; placement is operator work after the handle exists.
+
+If an extension imports another package in code, keep that dependency in the extension’s `pyproject.toml` / `package.json`. Use `product.yaml` when membership is a **product** decision, not only a library import.
+
+**Checklist**
+
+1. Add or update a block under `packages:` with the handle and registry names from the extension repo.
+2. Pull request in **this** repository (no `*-bom` checkout required on your machine).
+3. After merge, tell the operator a new handle may need **placement** before deploy.
+4. Release train / registry pins for new packages are handled outside this file.
+
+---
+
+
+
+## Quick reference — all paths
+
+
+| Path                                         | Owner                            |
+| -------------------------------------------- | -------------------------------- |
+| `assets/*.png`                               | Design                           |
+| `locales/*.json`                             | Copy                             |
+| `captions.js`                                | Copy                             |
+| `product.yaml`                               | Developer (product manifest)     |
+| `index.js`, `package.json`, `pyproject.toml` | Developer (structure / releases) |
+

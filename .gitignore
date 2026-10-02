@@ -1,0 +1,23 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Environments
+.venv/
+venv/
+node_modules/
+
+# OS
+.DS_Store
+
+# Generated wl package tree (copied from root assets/locales at build time)
+src/wl/locales/
+src/wl/assets/
+src/wl/product.yaml

@@ -15,5 +15,15 @@ export const locales: {
       title: string
       subtitle: string
     }
+    email: {
+      invite: {
+        subject: string
+        subjectHint: string
+        heading: string
+        intro: string
+        code: string
+        link: string
+      }
+    }
   }
 }

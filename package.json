@@ -15,6 +15,7 @@
     "index.d.ts",
     "captions.js",
     "assets",
-    "locales"
+    "locales",
+    "product.yaml"
   ]
 }

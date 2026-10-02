@@ -1,0 +1,9 @@
+# Packages this product installs. Not placement, accounts, or versions.
+# Operators copy new handles into renglo.yaml with: renglo catalog sync
+packages:
+  data:
+    python: renglo-data
+    npm: '@renglo/data'
+  schd:
+    python: renglo-schd
+    npm: '@renglo/schd'
