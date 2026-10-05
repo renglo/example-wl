@@ -1,6 +1,9 @@
 {
   "name": "@example/wl",
   "version": "0.0.1",
+  "renglo": {
+    "platform": "0.1.4"
+  },
   "description": "Template console white-label pack: logos, captions, and locales. Rename to @<tenant>/wl.",
   "license": "MIT",
   "type": "module",
