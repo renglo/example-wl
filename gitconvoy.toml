@@ -1,0 +1,4 @@
+# git-convoy membership marker (repo root).
+# Public template. Not a tenant pack, so trains must not cut or pin it.
+# role: product (default if absent) | ops | bom | incubating | registry
+role = "incubating"
